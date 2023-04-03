@@ -1,5 +1,5 @@
 name: Second workflow
-on: push
+on: [push, workflow_dispatch, workflow_call, pull_request, pull_request_review]
 jobs:
   Running-job:
     runs-on: ubuntu-latest
@@ -14,3 +14,23 @@ jobs:
         run: npm ci
       - name: Running the tests
         run: npm test
+      - name: Outputting Github values
+        run: echo "${{toJSON(github)}}"
+  deploying:
+    runs-on: ubuntu-latest #Each job has a seperate runner which is completely different from previous one
+    needs: Running-job #Indicates that jobs needs to run in sequence order
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Install NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Installing dependencies
+        run: npm ci
+      - name: Running the tests
+        run: npm test
+      - name: deploying
+        run: npm run build
+      - name: echo
+        run: echo "deploying....."

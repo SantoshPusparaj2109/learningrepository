@@ -1,11 +1,13 @@
 terraform {
   cloud {
     organization = "development-env"
+
+    workspaces = {
+      name = "learningrepository"
+    }
   }
 
-  workspaces = {
-    name = "learningrepository"
-  }
+
 }
 
 provider "aws" {
